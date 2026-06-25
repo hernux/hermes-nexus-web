@@ -14,12 +14,15 @@ export default function Home() {
             { label: "Groq", desc: "14 000 req/j", color: "green" },
             { label: "OpenRouter", desc: "150 req/j", color: "blue" },
             { label: "Navigateurs", desc: "5 LLMs", color: "purple" },
-          ].map((item) => (
-            <div key={item.label} className="bg-gray-900 p-4 rounded-xl border border-gray-800">
-              <p className="text-2xl font-bold text-${item.color}-400">{item.label}</p>
-              <p className="text-gray-500 text-sm">{item.desc}</p>
-            </div>
-          ))}
+          ].map((item) => {
+            const colorMap: Record<string, string> = { green: "text-green-400", blue: "text-blue-400", purple: "text-purple-400" }
+            return (
+              <div key={item.label} className="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                <p className={`text-2xl font-bold ${colorMap[item.color] || "text-gray-400"}`}>{item.label}</p>
+                <p className="text-gray-500 text-sm">{item.desc}</p>
+              </div>
+            )
+          })}
         </div>
 
         <div className="flex gap-4 justify-center">

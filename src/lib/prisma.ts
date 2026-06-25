@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { PrismaNeon } from "@prisma/adapter-neon"
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined }
 let _prismaError: string | undefined = undefined
@@ -7,7 +8,8 @@ function getPrisma(): PrismaClient | null {
   if (globalForPrisma.prisma) return globalForPrisma.prisma
   if (!process.env.DATABASE_URL) { _prismaError = "DATABASE_URL not set"; return null }
   try {
-    const client = new PrismaClient()
+    const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL })
+    const client = new PrismaClient({ adapter })
     globalForPrisma.prisma = client
     _prismaError = undefined
     return client

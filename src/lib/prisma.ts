@@ -1,14 +1,17 @@
 import { PrismaClient } from "@prisma/client"
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | null }
-let prisma: PrismaClient | null = null
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined }
 
-try {
-  prisma = globalForPrisma.prisma ?? new PrismaClient()
-  if (process.env.NODE_ENV !== "production" && prisma) globalForPrisma.prisma = prisma
-} catch {
-  console.warn("⚠️ Prisma non initialisé — vérifier DATABASE_URL")
+function getPrisma(): PrismaClient | null {
+  if (globalForPrisma.prisma) return globalForPrisma.prisma
+  if (!process.env.DATABASE_URL) return null
+  try {
+    const client = new PrismaClient()
+    globalForPrisma.prisma = client
+    return client
+  } catch {
+    return null
+  }
 }
 
-export { prisma }
-// Deployed: 2026-06-25 06:39
+export { getPrisma }

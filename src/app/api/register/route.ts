@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server"
 import { hash } from "bcryptjs"
-import { prisma } from "@/lib/prisma"
+import { getPrisma } from "@/lib/prisma"
 
 export async function POST(req: Request) {
   try {
     const { email, password, name } = await req.json()
-    if (!email || !password || !prisma) return NextResponse.json({ error: email && password ? "Base de données non connectée" : "Email et mot de passe requis" }, { status: 400 })
+    const prisma = getPrisma()
+    if (!email || !password || !prisma) return NextResponse.json({ email: "Prisma non connecté" }, { status: 400 })
 
     const exists = await prisma.user.findUnique({ where: { email } })
     if (exists) return NextResponse.json({ error: "Email déjà utilisé" }, { status: 400 })

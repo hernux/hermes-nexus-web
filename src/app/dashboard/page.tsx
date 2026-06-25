@@ -1,11 +1,12 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { prisma } from "@/lib/prisma"
+import { getPrisma } from "@/lib/prisma"
 
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user) redirect("/login")
 
+  const prisma = getPrisma()
   const users = prisma ? await prisma.user.findMany({ select: { id: true, email: true, name: true, createdAt: true } }) : []
 
   return (

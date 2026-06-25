@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { auth, signOut } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getPrisma } from "@/lib/prisma"
 
@@ -12,10 +12,19 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">⚡ Hermès Nexus</h1>
-        <p className="text-gray-400 mb-8">
-          Connecté en tant que <span className="text-blue-400">{session.user.email}</span>
-        </p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">⚡ Hermès Nexus</h1>
+            <p className="text-gray-400">
+              Connecté en tant que <span className="text-blue-400">{session.user.email}</span>
+            </p>
+          </div>
+          <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }) }}>
+            <button type="submit" className="px-4 py-2 bg-red-700 hover:bg-red-600 rounded-lg text-sm font-semibold transition">
+              Se déconnecter
+            </button>
+          </form>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">

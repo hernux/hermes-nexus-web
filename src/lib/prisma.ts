@@ -14,6 +14,6 @@ function getPrisma(): PrismaClient | null {
   }
 }
 
-export const getDbUrl = () => process.env.DATABASE_URL?.slice(0, 10) + "..." ?? "NOT SET"
+export const getDbUrl = () => process.env.DATABASE_URL ? process.env.DATABASE_URL.slice(0, 10) + "..." : "NOT SET"
 
 export { getPrisma }
